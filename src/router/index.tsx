@@ -1,12 +1,16 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { lazy } from 'react';
 
-import Login from '../views/login';
-import Home from '../views/home';
+const Home = lazy(() => import('@/views/home/index.tsx'));
+const Login = lazy(() => import('@/views/login/index'));
+const NoFound = lazy(() => import('@/views/notFound/index'));
 const AppRouter = () => {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/home" replace />} />
+      <Route index path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="*" element={<NoFound />} />
     </Routes>
   );
 };
