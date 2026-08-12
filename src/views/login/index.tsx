@@ -2,12 +2,30 @@ import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
 import { Button, Form, Input } from 'antd';
 
-type FieldType = {
-  username?: string;
-  password?: string;
-};
-
+const formFields = [
+  {
+    name: 'username',
+    label: '用户名',
+    rules: [{ required: true, message: '请输入用户名' }],
+    component: <Input placeholder="请输入用户名" />,
+  },
+  {
+    name: 'password',
+    label: '密码',
+    rules: [{ required: true, message: '请输入密码' }],
+    component: <Input.Password placeholder="请输入密码" />,
+  },
+];
 function LoginForm() {
+  const [form] = Form.useForm();
+  const submit = async () => {
+    try {
+      await form.validateFields();
+      console.log('登录');
+    } catch (err) {
+      console.error(err, '登录失败');
+    }
+  };
   return (
     <div className={style['login-form']}>
       <div className={style.leftbg}></div>
@@ -16,15 +34,19 @@ function LoginForm() {
           <img src={logo} />
           <h3>智慧园区管理平台</h3>
         </div>
-        <Form labelCol={{ span: 4 }}>
-          <Form.Item<FieldType> label="用户名" name="username">
-            <Input />
-          </Form.Item>
-          <Form.Item<FieldType> label="密码" name="password">
-            <Input.Password />
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 10, span: 16 }}>
-            <Button type="primary">登录</Button>
+
+        <Form labelCol={{ span: 5 }}>
+          {formFields.map((item) => {
+            return (
+              <Form.Item key={item.name} name={item.name} label={item.label} rules={item.rules}>
+                {item.component}
+              </Form.Item>
+            );
+          })}
+          <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
+            <Button type="primary" block onClick={submit}>
+              登录
+            </Button>
           </Form.Item>
         </Form>
       </div>
