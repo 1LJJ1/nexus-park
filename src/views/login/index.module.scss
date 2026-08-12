@@ -1,0 +1,32 @@
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('@/assets/images/bg.jpg');
+}
+
+.login-form {
+  width: 1200px;
+  height: 720px;
+  background-color: #fff;
+  display: flex;
+  .leftbg {
+    flex-grow: 1;
+    height: 100%;
+    background: url('@/assets/images/lgbg.jpg');
+  }
+  .part {
+    width: 360px;
+    padding: 140px 0 20px 20px;
+    .title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      img {
+        margin-bottom: 3px;
+      }
+    }
+  }
+}
