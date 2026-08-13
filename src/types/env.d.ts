@@ -1,4 +1,8 @@
-declare module 'modern-normalize' {
-  const css: string;
-  export default css;
+interface ImportMetaEnv {
+  readonly VITE_APP_ENV: string;
+  readonly VITE_APP_NAME: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
 }
