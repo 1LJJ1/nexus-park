@@ -2,6 +2,8 @@ import { Button, Form, Input } from 'antd';
 import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
 import { loginAPI } from '@/api/login/login.api';
+import { useSelector, useDispatch } from 'react-redux';
+import { setToken, setUserInfo } from '@/stores/module/user.slice';
 const formFields = [
   {
     name: 'username',
@@ -26,6 +28,7 @@ const formFields = [
 ];
 function LoginForm() {
   const [form] = Form.useForm();
+  const token = useSelector((state) => state.counter.token);
   const submit = async () => {
     try {
       await form.validateFields();
@@ -42,6 +45,7 @@ function LoginForm() {
   return (
     <div className={style['login-form']}>
       <div className={style.leftbg}></div>
+      <p>{token}</p>
       <div className={style.part}>
         <div className={style.title}>
           <img src={logo} />
