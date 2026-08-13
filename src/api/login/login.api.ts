@@ -1,7 +1,18 @@
 import request from '../index';
-export const loginAPI = <T>() => {
-  return request<ResponseData<T>>({
+
+interface LoginReq {
+  username: string;
+  password: string;
+}
+
+interface LoginResp {
+  token: string;
+  userId: string;
+}
+export const loginAPI = (data: LoginReq) => {
+  return request<ResponseData<LoginResp>>({
     url: '/login',
     method: 'post',
+    data,
   });
 };

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
+
 const http = axios.create({
   baseURL: '/api',
   timeout: 10000,

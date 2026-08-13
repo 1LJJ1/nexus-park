@@ -1,6 +1,7 @@
+import { Button, Form, Input } from 'antd';
 import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
-import { Button, Form, Input } from 'antd';
+import { loginAPI } from '@/api/login/login.api';
 const formFields = [
   {
     name: 'username',
@@ -28,6 +29,11 @@ function LoginForm() {
   const submit = async () => {
     try {
       await form.validateFields();
+      const res = await loginAPI({
+        username: 'admin',
+        password: '123456',
+      });
+      console.log(res);
       console.log('登录');
     } catch (err) {
       console.error(err, '登录失败');
