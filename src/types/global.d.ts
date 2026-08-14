@@ -1,6 +1,6 @@
 declare global {
   interface ResponseData<T> {
-    code: string;
+    code: string | number;
     data: T;
     message: string;
   }

@@ -1,9 +1,11 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
 import { loginAPI } from '@/api/login/login.api';
-import { useSelector, useDispatch } from 'react-redux';
-import { setToken, setUserInfo } from '@/stores/module/user.slice';
+import type { RootState } from '@/stores/index';
+import { setToken } from '@/stores/module/user.slice';
 const formFields = [
   {
     name: 'username',
@@ -28,46 +30,54 @@ const formFields = [
 ];
 function LoginForm() {
   const [form] = Form.useForm();
-  const token = useSelector((state) => state.counter.token);
+  const token = useSelector((state: RootState) => state.userReducer.token);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [messageApi, contextHolder] = message.useMessage();
   const submit = async () => {
     try {
-      await form.validateFields();
+      const value = await form.validateFields();
       const res = await loginAPI({
-        username: 'admin',
-        password: '123456',
+        username: value.username,
+        password: value.password,
       });
-      console.log(res);
-      console.log('登录');
+      if (res.code !== 200) return messageApi.error(res.message);
+      messageApi.success('登录成功');
+      dispatch(setToken(res.data.token));
+      navigate('/home', { replace: true });
     } catch (err) {
       console.error(err, '登录失败');
     }
   };
   return (
-    <div className={style['login-form']}>
-      <div className={style.leftbg}></div>
-      <p>{token}</p>
-      <div className={style.part}>
-        <div className={style.title}>
-          <img src={logo} />
-          <h3>智慧园区管理平台</h3>
-        </div>
+    <>
+      {contextHolder}
+      <div className={style['login-form']}>
+        <div className={style.leftbg}></div>
+        <div className={style.part}>
+          <div className={style.title}>
+            <img src={logo} />
+            <p>{token}</p>
+            <h3>智慧园区管理平台</h3>
+          </div>
 
-        <Form form={form} labelCol={{ span: 5 }}>
-          {formFields.map((item) => {
-            return (
-              <Form.Item key={item.name} name={item.name} label={item.label} rules={item.rules}>
-                {item.component}
-              </Form.Item>
-            );
-          })}
-          <Form.Item wrapperCol={{ offset: 5, span: 20 }}>
-            <Button type="primary" block onClick={submit}>
-              登录
-            </Button>
-          </Form.Item>
-        </Form>
+          <Form form={form} labelCol={{ span: 5 }}>
+            {formFields.map((item) => {
+              return (
+                <Form.Item key={item.name} name={item.name} label={item.label} rules={item.rules}>
+                  {item.component}
+                </Form.Item>
+              );
+            })}
+            <Form.Item wrapperCol={{ offset: 5, span: 20 }}>
+              <Button type="primary" block onClick={submit}>
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 export default function Login() {
