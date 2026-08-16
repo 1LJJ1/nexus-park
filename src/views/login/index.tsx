@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -34,9 +35,11 @@ function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
+  const [loadings, setLoadings] = useState<boolean>(false);
   const submit = async () => {
     try {
       const value = await form.validateFields();
+      setLoadings(true);
       const res = await loginAPI({
         username: value.username,
         password: value.password,
@@ -47,6 +50,8 @@ function LoginForm() {
       navigate('/home', { replace: true });
     } catch (err) {
       console.error(err, '登录失败');
+    } finally {
+      setLoadings(false);
     }
   };
   return (
@@ -70,7 +75,7 @@ function LoginForm() {
               );
             })}
             <Form.Item wrapperCol={{ offset: 5, span: 20 }}>
-              <Button type="primary" block onClick={submit}>
+              <Button type="primary" block loading={loadings} onClick={submit}>
                 登录
               </Button>
             </Form.Item>

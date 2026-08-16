@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    token: localStorage.getItem('nexus-token'),
+    token: localStorage.getItem('nexus-token') || '',
     userInfo: {},
   },
   reducers: {

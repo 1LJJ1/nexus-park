@@ -5,7 +5,6 @@ export default [
   {
     url: '/api/login',
     method: 'post',
-    delay: 300, // 模拟网络请求延时
     response: ({ body }) => {
       // 获取前端传过来的账号密码
       const { username, password } = body;
