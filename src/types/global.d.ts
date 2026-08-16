@@ -1,3 +1,4 @@
+export {};
 declare global {
   interface ResponseData<T> {
     code: string | number;
@@ -5,9 +6,3 @@ declare global {
     message: string;
   }
 }
-declare module 'modern-normalize' {
-  const css: string;
-  export default css;
-}
-
-export {};
