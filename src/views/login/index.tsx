@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router';
 import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
 import { loginAPI } from '@/api/login/login.api';
-import type { RootState } from '@/stores/index';
-import { setToken } from '@/stores/module/user.slice';
+import type { RootState } from '@/store/index';
+import { setToken } from '@/store/module/user.slice';
 const formFields = [
   {
     name: 'username',
