@@ -1,46 +1,14 @@
-import React, { useState } from 'react';
-
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu } from 'antd';
-
-const { Header, Content, Footer, Sider } = Layout;
-
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-const items: MenuItem[] = [getItem('Option 1', '1'), getItem('Option 2', '2')];
-
+import { useState } from 'react';
+import { Breadcrumb, Layout } from 'antd';
+import LeftMenu from './components/leftMenu';
+const { Header, Content, Sider } = Layout;
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div
-          style={{
-            height: '64px',
-            textAlign: 'center',
-            color: '#fff',
-            lineHeight: '64px',
-            fontSize: '20px',
-            fontWeight: 'bold',
-          }}
-        >
-          智慧中台
-        </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+        <LeftMenu />
       </Sider>
       <Layout>
         <Header style={{ padding: 0 }} />
@@ -53,7 +21,6 @@ export default function Home() {
             }}
           ></div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>尾部</Footer>
       </Layout>
     </Layout>
   );
