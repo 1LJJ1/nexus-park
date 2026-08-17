@@ -34,7 +34,7 @@ export default function LeftMenu() {
       >
         智慧中台
       </div>
-      <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={menus} />
+      <Menu theme="dark" mode="inline" items={menus} />
     </div>
   );
 }
