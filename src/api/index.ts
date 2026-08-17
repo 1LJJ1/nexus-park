@@ -8,6 +8,10 @@ const http = axios.create({
 // 添加请求拦截器
 http.interceptors.request.use(
   function (config) {
+    const token = localStorage.getItem('nexus-token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   function (error) {

@@ -339,6 +339,7 @@ const customizeMenuList = [
   },
 ];
 export default [
+  // 登录
   {
     url: '/api/login',
     method: 'post',
@@ -386,6 +387,7 @@ export default [
       }
     },
   },
+  // 获取菜单
   {
     url: '/api/menu',
     method: 'get',
