@@ -9,12 +9,12 @@ interface LoginResp {
   token: string;
   userId: string;
 }
-interface MenuItem {
+export interface MenuItemResp {
   icon: string;
   label: string;
   key: string;
   // 递归：children 自身也是 MenuItem[]，可选
-  children?: MenuItem[];
+  children?: MenuItemResp[];
 }
 
 export const loginAPI = (data: LoginReq) => {
@@ -26,7 +26,7 @@ export const loginAPI = (data: LoginReq) => {
 };
 
 export const getMenuAPI = () => {
-  return request<ResponseData<MenuItem>>({
+  return request<ResponseData<MenuItemResp>>({
     url: '/menu',
     method: 'get',
   });
