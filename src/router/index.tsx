@@ -12,12 +12,19 @@ const AppRouter = () => {
         index
         path="/home"
         element={
-          <RequireAuth>
+          <RequireAuth allowed redirectTo="/login">
             <Home />
           </RequireAuth>
         }
       />
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/login"
+        element={
+          <RequireAuth allowed={false} redirectTo="/home">
+            <Login />
+          </RequireAuth>
+        }
+      />
       <Route path="*" element={<NoFound />} />
     </Routes>
   );
