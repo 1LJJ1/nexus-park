@@ -6,7 +6,7 @@ import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
 import { loginAPI, getMenuAPI } from '@/api/login/login.api';
 import type { RootState } from '@/store/index';
-import { setToken } from '@/store/module/user.slice';
+import { setToken, setUserInfo } from '@/store/module/user.slice';
 import { setMenu } from '@/store/module/menu.slice';
 const formFields = [
   {
@@ -48,6 +48,7 @@ function LoginForm() {
       if (res.code !== 200) return messageApi.error(res.message);
       messageApi.success('登录成功');
       dispatch(setToken(res.data.token));
+      dispatch(setUserInfo(res.data.username));
       await getMenu();
       navigate('/home', { replace: true });
     } catch (err) {

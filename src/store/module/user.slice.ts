@@ -3,7 +3,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     token: localStorage.getItem('nexus-token') || '',
-    userInfo: {},
+    userInfo: localStorage.getItem('nexus-userInfo') || '',
   },
   reducers: {
     setToken(state, actions) {
@@ -12,6 +12,7 @@ export const userSlice = createSlice({
     },
     setUserInfo(state, actions) {
       state.userInfo = actions.payload;
+      localStorage.setItem('nexus-userInfo', actions.payload);
     },
   },
 });

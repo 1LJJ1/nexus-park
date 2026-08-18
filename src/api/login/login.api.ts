@@ -7,7 +7,8 @@ interface LoginReq {
 
 interface LoginResp {
   token: string;
-  userId: string;
+  username: string;
+  btnAuth: string[];
 }
 export interface MenuItemResp {
   icon: string;
