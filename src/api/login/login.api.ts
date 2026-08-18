@@ -27,7 +27,7 @@ export const loginAPI = (data: LoginReq) => {
 };
 
 export const getMenuAPI = () => {
-  return request<ResponseData<MenuItemResp>>({
+  return request<ResponseData<MenuItemResp[]>>({
     url: '/menu',
     method: 'get',
   });

@@ -18,7 +18,7 @@ import {
   Settings,
   Personal,
 } from './componentRoute';
-export const componentMap = {
+export const componentMap: Record<string, React.ReactNode> = {
   '/dashboard': <Dashboard />,
   '/users/list': <UserList />,
   '/users/add': <AddUser />,
