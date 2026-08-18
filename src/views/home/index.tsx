@@ -50,14 +50,16 @@ export default function Home() {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Dropdown menu={{ items: DropdownItems, onClick: menuClick }} trigger={['click']}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                {username}
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
+          <div style={{ float: 'right', marginRight: 30 }}>
+            <Dropdown menu={{ items: DropdownItems, onClick: menuClick }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  {username}
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+          </div>
         </Header>
         <Content style={{ margin: '0 16px' }}>
           <div>工作台</div>
