@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Layout, theme, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import type { RootState } from '@/store/index';
 import { setUserInfo, setToken } from '@/store/module/user.slice';
 import { DownOutlined } from '@ant-design/icons';
@@ -68,7 +68,7 @@ export default function Home() {
               minHeight: 360,
             }}
           >
-            主体内容
+            <Outlet />
           </div>
         </Content>
       </Layout>

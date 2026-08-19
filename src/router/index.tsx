@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { generateRoutes } from './generateRoutes';
 import { useSelector } from 'react-redux';
 import RequireAuth from '@/components/RequireAuth';
@@ -12,31 +12,32 @@ const AppRouter = () => {
   const router = generateRoutes(menuList);
   console.log(router);
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/home" replace />} />
-      <Route
-        index
-        path="/home"
-        element={
-          <RequireAuth allowed redirectTo="/login">
-            <Home />
-          </RequireAuth>
-        }
-      >
-        {router.map((item) => {
-          <Route path={item.path} element={item.element}></Route>;
-        })}
-      </Route>
-      <Route
-        path="/login"
-        element={
-          <RequireAuth allowed={false} redirectTo="/home">
-            <Login />
-          </RequireAuth>
-        }
-      />
-      <Route path="*" element={<NoFound />} />
-    </Routes>
+    <Suspense fallback={<div>加载中</div>}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route
+          path="home"
+          element={
+            <RequireAuth allowed redirectTo="/login">
+              <Home />
+            </RequireAuth>
+          }
+        >
+          {router.map((item) => (
+            <Route key={item.path} path={item.path} element={item.element} />
+          ))}
+        </Route>
+        <Route
+          path="login"
+          element={
+            <RequireAuth allowed={false} redirectTo="/home">
+              <Login />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<NoFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 
