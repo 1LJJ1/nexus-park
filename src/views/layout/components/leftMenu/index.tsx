@@ -21,16 +21,25 @@ function mapMenuItems(items: MenuItemResp[]): MenuItem[] {
 export default function LeftMenu() {
   const menuList = useSelector((state: RootState) => state.menuReducer.menu);
   const navigate = useNavigate();
-  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const location = useLocation();
+  // 初始化展开状态：直接解析路径第一段
+  const [openKeys, setOpenKeys] = useState<string[]>(() => {
+    const parts = location.pathname.split('/').filter(Boolean);
+    if (parts.length >= 2) {
+      return [`/${parts[0]}`];
+    }
+    return [];
+  });
   const menus = mapMenuItems(menuList);
   // 处理展开/收起事件，只保留最后一个打开的 key
   const onOpenChange = (keys: string[]) => {
     const latestOpenKey = keys[keys.length - 1];
     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
   };
-  const onClikeMenu = (item: MenuItem) => {
-    navigate(item?.key);
+  const onClikeMenu: MenuProps['onClick'] = (item) => {
+    navigate(item.key);
   };
+
   return (
     <div>
       <div
@@ -48,10 +57,11 @@ export default function LeftMenu() {
       <Menu
         theme="dark"
         mode="inline"
+        selectedKeys={[location.pathname]}
+        openKeys={openKeys}
         onOpenChange={onOpenChange}
         onClick={onClikeMenu}
         items={menus}
-        openKeys={openKeys}
       />
     </div>
   );

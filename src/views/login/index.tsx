@@ -50,7 +50,7 @@ function LoginForm() {
       dispatch(setToken(res.data.token));
       dispatch(setUserInfo(res.data.username));
       await getMenu();
-      navigate('/home', { replace: true });
+      navigate('/', { replace: true });
     } catch (err) {
       console.error(err, '登录失败');
     } finally {
