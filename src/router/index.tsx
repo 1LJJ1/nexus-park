@@ -23,6 +23,7 @@ function generateRoutes(menus: MenuItemResp[]): React.ReactNode[] {
 }
 const AppRouter = () => {
   const menuList = useSelector((state: RootState) => state.menuReducer.menu);
+  const dynamicRouter = generateRoutes(menuList);
   return (
     <Suspense fallback={<div>加载中...</div>}>
       <Routes>
@@ -43,7 +44,7 @@ const AppRouter = () => {
           }
         >
           {/* 动态生成所有业务路由，全部绝对路径挂在home的children下 */}
-          {generateRoutes(menuList)}
+          {dynamicRouter}
         </Route>
 
         <Route
