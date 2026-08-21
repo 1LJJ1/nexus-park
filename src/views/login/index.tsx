@@ -4,10 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import style from './index.module.scss';
 import logo from '@/assets/images/logo.png';
-import { loginAPI, getMenuAPI } from '@/api/login/login.api';
+import { loginAPI } from '@/api/login/login.api';
 import type { RootState } from '@/store/index';
 import { setToken, setUserInfo } from '@/store/module/user.slice';
-import { setMenu } from '@/store/module/menu.slice';
 const formFields = [
   {
     name: 'username',
@@ -49,20 +48,11 @@ function LoginForm() {
       messageApi.success('登录成功');
       dispatch(setToken(res.data.token));
       dispatch(setUserInfo(res.data.username));
-      await getMenu();
       navigate('/', { replace: true });
     } catch (err) {
       console.error(err, '登录失败');
     } finally {
       setLoadings(false);
-    }
-  };
-  const getMenu = async () => {
-    try {
-      const res = await getMenuAPI();
-      dispatch(setMenu(res.data));
-    } catch (err) {
-      console.error(err, '获取菜单失败');
     }
   };
   return (
