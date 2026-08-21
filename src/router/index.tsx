@@ -35,7 +35,7 @@ const AppRouter = () => {
             </RequireAuth>
           }
         />
-        <Route path="login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route
           element={
             <RequireAuth>
@@ -43,7 +43,6 @@ const AppRouter = () => {
             </RequireAuth>
           }
         >
-          {/* 动态生成所有业务路由，全部绝对路径挂在home的children下 */}
           {dynamicRouter}
         </Route>
 
