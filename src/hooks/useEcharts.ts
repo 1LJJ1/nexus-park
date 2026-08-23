@@ -13,9 +13,7 @@ export function useEcharts(
   config: UseEchartsConfig = {}
 ) {
   const { autoResize = true, resizeDelay = 120 } = config;
-
   const instanceRef = useRef<echarts.ECharts | null>(null); // ECharts实例
-
   const resizeTimerRef = useRef<number | null>(null);
 
   const renderChart = useCallback((option: Partial<echarts.EChartsOption>, notMerge = false) => {
@@ -40,7 +38,6 @@ export function useEcharts(
 
   useEffect(() => {
     const dom = domRef.current;
-
     if (!dom) return;
 
     instanceRef.current = echarts.init(dom);
