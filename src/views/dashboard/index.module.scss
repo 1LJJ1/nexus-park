@@ -1,0 +1,19 @@
+.cardContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  .number {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .desc {
+    color: #999;
+  }
+  span {
+    margin: 2px 0;
+  }
+}
