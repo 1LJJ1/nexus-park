@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button, Table, message, Tag } from 'antd';
+import { Card, Form, Input, Button, Table, message, Tag, Popconfirm } from 'antd';
 import type { TableProps } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { getLesseeUserListAPI } from '@/api/lesseeUser/lesseeUser.api';
@@ -89,9 +89,18 @@ export default function LesseeUserList() {
             >
               编辑
             </Button>
-            <Button type="primary" size="small" danger onClick={() => handleDelete(row)}>
-              删除
-            </Button>
+            <Popconfirm
+              title="二次确认"
+              description="确认删除该数据?"
+              onConfirm={() => handleDelete(row)}
+              onCancel={() => {}}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" size="small" danger>
+                删除
+              </Button>
+            </Popconfirm>
           </>
         );
       },
@@ -124,7 +133,10 @@ export default function LesseeUserList() {
     console.log('编辑', row);
   };
   const handleDelete = (row: LesseeUserItem) => {
-    console.log('删除', row);
+    const newTableData = tableData.filter((item) => item.id !== row.id);
+    messageApi.success('删除成功！');
+    setTableData(newTableData);
+    handleRefresh();
   };
   const handleBranchDelete = () => {
     console.log('批量删除', selectRows);
@@ -146,6 +158,12 @@ export default function LesseeUserList() {
       page: pagination.current,
       pageSize: pagination.pageSize,
     });
+  };
+  // 刷新
+  const handleRefresh = () => {
+    setQuery((prev) => ({
+      ...prev,
+    }));
   };
   useEffect(() => {
     const run = async () => {
@@ -182,7 +200,12 @@ export default function LesseeUserList() {
           <Button type="primary" style={{ marginRight: '10px' }}>
             新增企业
           </Button>
-          <Button type="primary" danger onClick={handleBranchDelete}>
+          <Button
+            type="primary"
+            danger
+            onClick={handleBranchDelete}
+            disabled={selectRows.length === 0}
+          >
             批量删除
           </Button>
         </div>
