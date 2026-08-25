@@ -3,10 +3,11 @@ import type { TableProps } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { getLesseeUserListAPI } from '@/api/lesseeUser/lesseeUser.api';
 import type { LesseeUserListReq, LesseeUserItem } from '@/api/lesseeUser/lesseeUser.api';
-
+import FormModal from './formModal.tsx';
 export default function LesseeUserList() {
   const [tableData, setTableData] = useState<LesseeUserItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [selectRows, setSelectRows] = useState<LesseeUserItem[]>([]);
   const [query, setQuery] = useState<LesseeUserListReq>({
     companyName: '',
@@ -15,6 +16,9 @@ export default function LesseeUserList() {
     page: 1,
     pageSize: 10,
   });
+  const [formEdit] = Form.useForm();
+  const [visible, setVisible] = useState<boolean>(false);
+  const [currentRow, setCurrentRow] = useState<LesseeUserItem | null>(null);
   const [total, setTotal] = useState(0);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -130,7 +134,13 @@ export default function LesseeUserList() {
     }));
   };
   const handleEdit = (row: LesseeUserItem) => {
-    console.log('编辑', row);
+    formEdit.setFieldsValue(row);
+    setCurrentRow(row);
+    setVisible(true);
+  };
+  const handleAdd = () => {
+    setCurrentRow(null);
+    setVisible(true);
   };
   const handleDelete = (row: LesseeUserItem) => {
     const newTableData = tableData.filter((item) => item.id !== row.id);
@@ -140,6 +150,28 @@ export default function LesseeUserList() {
   };
   const handleBranchDelete = () => {
     console.log('批量删除', selectRows);
+  };
+  const handleOk = () => {
+    setConfirmLoading(true);
+    if (currentRow) {
+      console.log('编辑', formEdit.getFieldsValue());
+      setTimeout(() => {
+        console.log('编辑完成');
+        setConfirmLoading(false);
+        setVisible(false);
+      }, 3000);
+    } else {
+      console.log('新增', formEdit.getFieldsValue());
+      setTimeout(() => {
+        console.log('新增完成');
+        setConfirmLoading(false);
+        setVisible(false);
+      }, 3000);
+    }
+  };
+  const handleCancel = () => {
+    setVisible(false);
+    formEdit.resetFields();
   };
   const handleReset = () => {
     form.resetFields();
@@ -197,7 +229,7 @@ export default function LesseeUserList() {
           </Form.Item>
         </Form>
         <div style={{ marginTop: '20px' }}>
-          <Button type="primary" style={{ marginRight: '10px' }}>
+          <Button type="primary" style={{ marginRight: '10px' }} onClick={handleAdd}>
             新增企业
           </Button>
           <Button
@@ -227,6 +259,22 @@ export default function LesseeUserList() {
           rowSelection={{ type: 'checkbox', ...rowSelection }}
         />
       </Card>
+      <FormModal
+        open={visible}
+        title={currentRow ? '编辑' : ' 新增'}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        confirmLoading={confirmLoading}
+        width={{
+          xxl: '40%',
+          xl: '45%',
+          lg: '55%',
+          md: '70%',
+          sm: '85%',
+          xs: '100%',
+        }}
+        form={formEdit}
+      ></FormModal>
     </>
   );
 }
