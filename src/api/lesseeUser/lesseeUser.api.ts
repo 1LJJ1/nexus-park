@@ -27,7 +27,6 @@ export interface LesseeUserData {
 }
 
 // 获取租户列表
-
 export const getLesseeUserListAPI = (data: LesseeUserListReq) => {
   return request<ResponseData<LesseeUserData>>({
     url: '/userList',

@@ -17,7 +17,7 @@ export default [
             id: '@string("number",6)',
             name: '@cname',
             'status|1': ['1', '2', '3'],
-            tel: Mock.Random.phone(),
+            tel: /^1[3-9]\d{9}$/, // ✅ 替换手机号
             'business|1': ['制造业', '互联网', '新媒体', '美业', '新能源', '物流', '电商'],
             email: '@email',
             creditCode: '@string("number",18)',
