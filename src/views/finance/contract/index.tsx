@@ -100,17 +100,28 @@ export default function Contract() {
   };
   // 重置
   const handleReset = () => {
+    form.resetFields();
     setQuery({
       page: 1,
       pageSize: 10,
     });
   };
-  const handleChange = (page: number, pageSize: number) => {
-    setQuery((prev) => ({
-      ...prev,
-      page,
-      pageSize,
-    }));
+  // 分页改变
+  const handlePageChange = (page: number, pageSize: number) => {
+    setQuery((prev) => {
+      if (pageSize !== prev.pageSize) {
+        return {
+          ...prev,
+          page: 1,
+          pageSize,
+        };
+      }
+      return {
+        ...prev,
+        page,
+        pageSize,
+      };
+    });
   };
   useEffect(() => {
     const loadData = () => {
@@ -148,7 +159,7 @@ export default function Contract() {
         current={query.page}
         pageSize={query.pageSize}
         total={total}
-        onChange={handleChange}
+        onChange={handlePageChange}
       />
       ;
     </>
