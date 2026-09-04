@@ -1,88 +1,87 @@
-import { Card, Form, Input, Button, Table, Tag, Pagination } from 'antd';
+import { Card, Form, Input, Button, Table, Tag, Pagination, Spin } from 'antd';
 import type { TableProps } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getContractListAPI } from '@/api/finance/finance.api';
 import type { ContractListQuery, ContractItem } from '@/api/finance/finance.api';
-export function parseContractQuery(sp: URLSearchParams): ContractListQuery {
-  return {
-    page: Number(sp.get('page') || 1),
-    pageSize: Number(sp.get('size') || 10),
-    contractNo: sp.get('contractNo') || undefined,
-    person: sp.get('person') || undefined,
-    tel: sp.get('tel') || undefined,
-  };
-}
+import { useEffect } from 'react';
+
 export default function Contract() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tableData, setTableData] = useState<ContractItem[]>([]);
-  const [query, setQuery] = useState<ContractListQuery>({
-    page: 1,
-    pageSize: 10,
-  });
-  const [total, setTotal] = useState(0);
   const [form] = Form.useForm();
+  const query: ContractListQuery = {
+    page: Number(searchParams.get('page')) || 1,
+    pageSize: Number(searchParams.get('pageSize')) || 10,
+    contractNo: searchParams.get('contractNo') || undefined,
+    person: searchParams.get('person') || undefined,
+    tel: searchParams.get('tel') || undefined,
+  };
+  const setQuery = (partial: Partial<ContractListQuery>) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (partial.page !== undefined) {
+        params.set('page', String(partial.page));
+      }
+      if (partial.pageSize !== undefined) params.set('pageSize', String(partial.pageSize));
 
-  const fetchData = useCallback(async () => {
-    try {
-      const res = await getContractListAPI(query);
-      setTableData(res.data.list);
-      setTotal(res.data.total);
-    } catch (err) {
-      console.error(err, '获取合同列表失败');
-    }
-  }, [query]);
+      (['contractNo', 'person', 'tel'] as const).forEach((key) => {
+        const val = partial[key];
+        if (val !== undefined && val !== null && val !== '') {
+          params.set(key, val);
+        } else if (key in partial) {
+          params.delete(key);
+        }
+      });
+      return params;
+    });
+  };
+  const fetchData = async (context: QueryFunctionContext<['contractList', ContractListQuery]>) => {
+    console.log('请求一次', context);
+    const { queryKey } = context;
+    const res = await getContractListAPI(queryKey[1]);
+    if (res.code !== 200) throw new Error(res.message || '获取合同列表失败');
+    return res;
+  };
+  const { data, isFetching } = useQuery({
+    queryKey: ['contractList', query],
+    queryFn: fetchData,
+  });
+  const tableData = data?.data?.list ?? [];
+  const total = data?.data?.total ?? 0;
+
+  useEffect(() => {
+    form.setFieldsValue({
+      contractNo: query.contractNo ?? '',
+      person: query.person ?? '',
+      tel: query.tel ?? '',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // 查询
   const handleSearch = () => {
     const value = form.getFieldsValue();
-    setQuery((prev) => ({
-      ...prev,
-      ...value,
-      page: 1,
-    }));
+    setQuery({ page: 1, pageSize: query.pageSize, ...value });
   };
   // 重置
   const handleReset = () => {
     form.resetFields();
-    setQuery({
-      page: 1,
-      pageSize: 10,
-    });
+    const value = form.getFieldsValue();
+    setQuery({ page: 1, pageSize: 10, ...value });
   };
-  // 分页改变
+  // 分页
   const handlePageChange = (page: number, pageSize: number) => {
-    setQuery((prev) => {
-      if (pageSize !== prev.pageSize) {
-        return {
-          ...prev,
-          page: 1,
-          pageSize,
-        };
-      }
-      return {
-        ...prev,
-        page,
-        pageSize,
-      };
-    });
+    const value = form.getFieldsValue();
+    if (pageSize !== query.pageSize) {
+      setQuery({ page: 1, pageSize, ...value });
+    } else {
+      setQuery({ page, pageSize, ...value });
+    }
   };
   const handleGoDetail = (item: ContractItem) => {
-    const params = new URLSearchParams();
-    params.append('contractNo', item.contractNo);
-    params.append('query', JSON.stringify(query));
-    navigate({ pathname: '/finance/surrender', search: params.toString() });
+    navigate({ pathname: '/finance/surrender', search: `?contractNo=${item.contractNo}` });
   };
-  useEffect(() => {
-    const p = parseContractQuery(searchParams);
-    const loadData = () => {
-      fetchData();
-    };
-    if (p.page || p.contractNo) {
-      setQuery(query);
-    }
-    loadData();
-  }, [fetchData]);
   const columns: TableProps<ContractItem>['columns'] = [
     {
       title: 'No.',
@@ -152,7 +151,7 @@ export default function Contract() {
     },
   ];
   return (
-    <>
+    <Spin spinning={isFetching}>
       <Card>
         <Form form={form} layout="inline">
           <Form.Item label="合同编号" name="contractNo">
@@ -183,7 +182,6 @@ export default function Contract() {
         total={total}
         onChange={handlePageChange}
       />
-      ;
-    </>
+    </Spin>
   );
 }
